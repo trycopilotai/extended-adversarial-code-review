@@ -1,0 +1,45 @@
+{
+  "note": "This is synthetic example material. No review round produced these numbers; they were chosen so that every clause reports a state.",
+  "token_ceiling_per_high": 400000,
+  "rounds": [
+    {
+      "round": 1,
+      "claims": 30,
+      "fixed": 12,
+      "user_visible": 4,
+      "regressions": 0,
+      "high_regressions": 0,
+      "unbounded_domain": false,
+      "shared_shape_ratio": 0.2,
+      "high_fixed": 5,
+      "tokens": 900000,
+      "minutes": 40
+    },
+    {
+      "round": 2,
+      "claims": 28,
+      "fixed": 11,
+      "user_visible": 2,
+      "regressions": 1,
+      "high_regressions": 1,
+      "unbounded_domain": false,
+      "shared_shape_ratio": 0.4,
+      "high_fixed": 3,
+      "tokens": 1100000,
+      "minutes": 45
+    },
+    {
+      "round": 3,
+      "claims": 31,
+      "fixed": 9,
+      "user_visible": 0,
+      "regressions": 3,
+      "high_regressions": 2,
+      "unbounded_domain": true,
+      "shared_shape_ratio": 0.7,
+      "high_fixed": 2,
+      "tokens": 1200000,
+      "minutes": 50
+    }
+  ]
+}

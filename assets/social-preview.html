@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>extended-adversarial-code-review</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 640px;
+        background: #101418;
+      }
+      body {
+        box-sizing: border-box;
+        padding: 72px 80px;
+        color: #f7fbff;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      .name {
+        font-size: 44px;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+      }
+      .line {
+        margin-top: 36px;
+        font-size: 30px;
+        line-height: 1.4;
+        color: #a7bac5;
+      }
+      .clauses {
+        margin-top: 44px;
+        font-size: 24px;
+        line-height: 1.6;
+      }
+      .fired {
+        color: #ffd166;
+      }
+      .quiet {
+        color: #55d6be;
+      }
+      .foot {
+        position: absolute;
+        left: 80px;
+        bottom: 56px;
+        font-size: 22px;
+        color: #a7bac5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="name">extended-adversarial-code-review</div>
+    <div class="line">
+      round_yield.py reports each of seven stopping clauses.
+    </div>
+    <div class="clauses">
+      <div class="fired">FIRED clause 1: unbounded fix domain</div>
+      <div class="fired">
+        FIRED clause 5: fixed-defect yield flat or falling
+      </div>
+      <div class="quiet">
+        quiet clause 6: two rounds with nothing user-visible
+      </div>
+    </div>
+    <div class="foot">trycopilot.ai · agent skill · MIT</div>
+  </body>
+</html>

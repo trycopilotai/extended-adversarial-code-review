@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-04",
+  "input_commit": "f4d637e081896f89af1dd3fdad691ce6cbef890c",
+  "input_commit_note": "The private commit the skill text and the program came from. It is not reachable from this repository, so it records provenance for the author and is not something a reader can verify.",
+  "skill": {
+    "path": "skills/extended-adversarial-code-review/SKILL.md",
+    "sha256": "eff09e1eacb36d56765d4cb2f124e0253ce574c71dbd53bf16cf3edd5f2a0961"
+  },
+  "program": {
+    "path": "skills/extended-adversarial-code-review/scripts/round_yield.py",
+    "sha256": "0212e7c12ca46643503529ab23185da21ec2870a6456d6c74652bbd75f035c83"
+  },
+  "input": {
+    "path": "examples/rounds.json",
+    "sha256": "cc5aca2681c0f7b187618095f3b6390941714a0c7b7489a986fdf29e204b564c",
+    "kind": "synthetic"
+  },
+  "agent": {
+    "invoked_the_skill": false,
+    "note": "No agent session invoked the skill to produce this evidence. The program was run directly from a shell while this release was being prepared."
+  },
+  "invocation": {
+    "command": "python3 skills/extended-adversarial-code-review/scripts/round_yield.py --explain examples/rounds.json",
+    "interpreter": "Python 3.13.13",
+    "working_directory": "a copy of skills/ and examples/ outside the repository"
+  },
+  "output": {
+    "path": "evidence/transcripts/round-yield-explain.txt",
+    "sha256": "26575593a6393cf510c554138dc2f3b846462ffd37095b607a7e12d3afa8edcd",
+    "edited": false,
+    "note": "The file is the capture, byte for byte. The capture wrapper wrote each command line before running it and wrote the exit status line from the program's exit status; everything between those lines is the program's standard output."
+  }
+}

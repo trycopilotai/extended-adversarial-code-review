@@ -1,0 +1,31 @@
+$ python3 skills/extended-adversarial-code-review/scripts/round_yield.py --explain examples/rounds.json
+yield curve
+  round 1   claims 30   fixed 12   user-visible 4   
+  round 2   claims 28   fixed 11   user-visible 2      <- 1 self-inflicted
+  round 3   claims 31   fixed 9    user-visible 0      <- 3 self-inflicted
+
+clauses
+  FIRED clause 1: unbounded fix domain
+  FIRED clause 2: one design defect, reported N times
+  FIRED clause 3: a fix from an earlier round broke something
+  FIRED clause 4: over a quarter of the round was cleanup
+  FIRED clause 5: fixed-defect yield flat or falling
+  quiet clause 6: two rounds with nothing user-visible
+  FIRED clause 7: past the declared token ceiling
+
+rounds: 3   claims: 89   fixed: 32   user-visible: 6
+tokens: 3,200,000
+wall-clock: 135 min
+cost per user-visible defect: 533,333 tokens
+
+STOP
+  clause 1: the fix for round 3's worst finding adds one more member of a set that has no enumeration. The loop cannot reach the end of that set. Change the approach: refuse what you cannot process rather than enumerate every form of it.
+  clause 2: 70% of round 3's survivors share a root cause. That is one design defect reported many times, and fixing them one at a time guarantees the next round reports it again in a form you did not enumerate.
+  clause 3: round 3 fixed 2 high-severity defect(s) that an earlier fix in this loop introduced. The loop is now reviewing itself, and every further round pays to repair the last one.
+  clause 4: round 3 spent 3 of 9 fixes (33%) undoing earlier rounds, above the 25% mark. Too much of this round's work was cleanup.
+  clause 5: fixed-defect count has not risen for two rounds (12, 11, 9). Claim counts stay high indefinitely; what you actually fixed is the yield.
+  clause 7: cost per net-new high-severity defect is 457,142 tokens, past the 400,000 ceiling declared at the start.
+
+Say this to the operator now, with the yield curve. Do not run another round first.
+$ echo "exit status: $?"
+exit status: 1
