@@ -1,8 +1,6 @@
 {
   "schema_version": 1,
   "date": "2026-10-04",
-  "input_commit": "f4d637e081896f89af1dd3fdad691ce6cbef890c",
-  "input_commit_note": "The private commit the skill text and the program came from. It is not reachable from this repository, so it records provenance for the author and is not something a reader can verify.",
   "skill": {
     "path": "skills/extended-adversarial-code-review/SKILL.md",
     "sha256": "eff09e1eacb36d56765d4cb2f124e0253ce574c71dbd53bf16cf3edd5f2a0961"

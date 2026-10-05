@@ -143,6 +143,11 @@ def render(chrome):
                     proc.wait(timeout=10)
                 except subprocess.TimeoutExpired:
                     proc.kill()
+        if not TARGET.exists() or TARGET.stat().st_mtime <= before:
+            raise SystemExit(
+                "Chrome exited without writing a new screenshot; "
+                "the existing PNG was not re-stamped"
+            )
 
 
 def main():
