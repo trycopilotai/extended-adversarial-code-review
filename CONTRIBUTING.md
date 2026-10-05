@@ -19,7 +19,7 @@ it reads `git ls-files`, `git log` and the release tag.
 fail on an innocent-looking prose edit:
 
 - the claim line at the top of the README must appear
-  verbatim, and each of the seven clause lines it refers to
+  verbatim, and each of the eight clause lines it refers to
   must be in the recorded transcript;
 - each install block must carry its own `release=` pin at
   the version both plugin manifests ship;
@@ -58,7 +58,7 @@ ready to pick up.
   different loop, on different code, are the most valuable
   thing this repository can receive.
 - **A stopping clause that is missing.** Describe the loop,
-  why none of the seven clauses fired, and what you would
+  why none of the eight clauses fired, and what you would
   have wanted the program to say.
 
 ## Pull requests

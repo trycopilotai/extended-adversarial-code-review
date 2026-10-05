@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "date": "2026-10-04",
+  "date": "2026-10-05",
   "skill": {
     "path": "skills/extended-adversarial-code-review/SKILL.md",
-    "sha256": "d45bf58f2566bae439dd5a049386fa51c97373e3e034d11a42a39133cbbfb711"
+    "sha256": "67d1f8a8be0626f1cf9be67399f5fa2099a4dd8c5666b10a5c45beff8b3c53d6"
   },
   "program": {
     "path": "skills/extended-adversarial-code-review/scripts/round_yield.py",
-    "sha256": "0212e7c12ca46643503529ab23185da21ec2870a6456d6c74652bbd75f035c83"
+    "sha256": "f5c694a157a1a3b150556e7562e120059819cbfa0f95d16e1f78e418d375f635"
   },
   "input": {
     "path": "examples/rounds.json",
@@ -25,7 +25,7 @@
   },
   "output": {
     "path": "evidence/transcripts/round-yield-explain.txt",
-    "sha256": "26575593a6393cf510c554138dc2f3b846462ffd37095b607a7e12d3afa8edcd",
+    "sha256": "cc00784413c495617663e75b26dee72e7de94bead35fcba8ebfab7298a3c36ab",
     "edited": false,
     "note": "The file is the capture, byte for byte. The capture wrapper wrote each command line before running it and wrote the exit status line from the program's exit status; everything between those lines is the program's standard output."
   }

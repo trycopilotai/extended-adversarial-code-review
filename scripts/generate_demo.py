@@ -58,7 +58,7 @@ FADE_IN = 4
 HOLD_UNTIL = 94
 
 COMMAND_PREFIX = "$ python3 "
-CLAUSE_COUNT = 7
+CLAUSE_COUNT = 8
 
 
 def session_lines(transcript: str) -> list[str]:
@@ -182,7 +182,7 @@ def render(transcript: str, animated: bool) -> str:
         style = ""
     description = (
         "A terminal runs round_yield.py with --explain on a synthetic "
-        "record. It prints the yield curve, the state of each of seven "
+        "record. It prints the yield curve, the state of each of eight "
         "stopping clauses, and the verdict with its exit status."
     )
     chrome = "\n".join(

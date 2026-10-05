@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="680" viewBox="0 0 1280 680" role="img" aria-labelledby="title description">
   <title id="title">Animated round_yield.py session</title>
-  <desc id="description">A terminal runs round_yield.py with --explain on a synthetic record. It prints the yield curve, the state of each of seven stopping clauses, and the verdict with its exit status.</desc>
+  <desc id="description">A terminal runs round_yield.py with --explain on a synthetic record. It prints the yield curve, the state of each of eight stopping clauses, and the verdict with its exit status.</desc>
   <style>
     .step-1 {
       opacity: 0;
@@ -57,11 +57,12 @@
       <text x="40" y="420" fill="#ffd166" xml:space="preserve">  FIRED clause 5: fixed-defect yield flat or falling</text>
       <text x="40" y="448" fill="#55d6be" xml:space="preserve">  quiet clause 6: two rounds with nothing user-visible</text>
       <text x="40" y="476" fill="#ffd166" xml:space="preserve">  FIRED clause 7: past the declared token ceiling</text>
+      <text x="40" y="504" fill="#55d6be" xml:space="preserve">  quiet clause 8: the round applied no fixes</text>
     </g>
     <g class="step-3">
-      <text x="40" y="518" fill="#ffd166" xml:space="preserve">STOP</text>
-      <text x="40" y="546" fill="#f7fbff" xml:space="preserve">$ echo &quot;exit status: $?&quot;</text>
-      <text x="40" y="574" fill="#f7fbff" xml:space="preserve">exit status: 1</text>
+      <text x="40" y="546" fill="#ffd166" xml:space="preserve">STOP</text>
+      <text x="40" y="574" fill="#f7fbff" xml:space="preserve">$ echo &quot;exit status: $?&quot;</text>
+      <text x="40" y="602" fill="#f7fbff" xml:space="preserve">exit status: 1</text>
     </g>
   </g>
   <text x="40" y="652" fill="#a7bac5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="16">Reconstructed from evidence/transcripts/round-yield-explain.txt</text>

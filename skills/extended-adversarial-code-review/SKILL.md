@@ -440,12 +440,14 @@ having, because they fire before the loop has cost much.
    no finding that changes what a person experiences.
 7. **Budget.** Cumulative tokens per net-new high-severity
    defect exceeds the ceiling you declared at the start.
+8. **Nothing fixed.** The round applied no fixes; another
+   round would re-read unchanged code. Hand the findings back.
 
 The episode's own retrospective rule caught only clause 3
 and would have saved one round. **Clauses 1 and 2 would have
 saved three rounds, roughly 8M tokens and 3 hours.**
 
-`scripts/round_yield.py` evaluates all seven from a small
+`scripts/round_yield.py` evaluates all eight from a small
 per-round JSON record. Keep the record; none of it is
 reconstructable afterwards. Record each round in
 `rounds.json` and run `round_yield.py` on it after every

@@ -4,7 +4,7 @@ Guidance for an agent that is about to run a multi-round
 adversarial review of code it wrote, and a small program
 that says when the loop should stop.
 
-round_yield.py reports each of seven stopping clauses.
+round_yield.py reports each of eight stopping clauses.
 
 <picture>
   <source
@@ -13,7 +13,7 @@ round_yield.py reports each of seven stopping clauses.
   />
   <img
     src="assets/demo.svg"
-    alt="A terminal runs round_yield.py with --explain. It prints a yield curve for three rounds, the state of each of seven stopping clauses, and the verdict STOP with exit status 1."
+    alt="A terminal runs round_yield.py with --explain. It prints a yield curve for three rounds, the state of each of eight stopping clauses, and the verdict STOP with exit status 1."
     width="100%"
   />
 </picture>
@@ -82,7 +82,7 @@ fails.
 
 ```sh
 set -eu
-release=v0.1.2
+release=v0.1.3
 install_target="$HOME/.claude/skills/extended-adversarial-code-review"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -119,7 +119,7 @@ the block above is `install_target`.
 
 ```sh
 set -eu
-release=v0.1.2
+release=v0.1.3
 install_target="$HOME/.agents/skills/extended-adversarial-code-review"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"

@@ -12,6 +12,7 @@ clauses
   FIRED clause 5: fixed-defect yield flat or falling
   quiet clause 6: two rounds with nothing user-visible
   FIRED clause 7: past the declared token ceiling
+  quiet clause 8: the round applied no fixes
 
 rounds: 3   claims: 89   fixed: 32   user-visible: 6
 tokens: 3,200,000

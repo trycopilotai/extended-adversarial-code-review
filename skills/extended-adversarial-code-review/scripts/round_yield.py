@@ -7,15 +7,18 @@ stopping feels finished, and the yield curve that would show
 the loop has gone negative is invisible unless somebody keeps
 the numbers.
 
-So keep the numbers. One record per round, seven clauses,
+So keep the numbers. One record per round, eight clauses,
 and a verdict that does not need judgment at the moment when
 judgment is least available.
 
-The clauses are ordered by when they fired in the episode
+Clauses 1 to 7 are ordered by when they fired in the episode
 this was derived from. The first two fire earliest and are
 worth the most; they are also the two whose inputs are
 easiest to leave out, so their absence is reported rather
-than passed over.
+than passed over. Clause 8 was added later, for a review
+that hands its findings back instead of fixing them: every
+other clause reads fix counts, so without it a round that
+fixes nothing could never be told to stop.
 
 Usage:
 
@@ -316,6 +319,19 @@ def clause_budget(rounds, ceiling):
     return ""
 
 
+def clause_nothing_fixed(rounds, ceiling):
+    """The round applied no fixes, so the code under review is unchanged."""
+    latest = rounds[-1]
+    if latest["fixed"] == 0:
+        return (
+            "round %s applied no fixes (%d claims, 0 fixed). Hand the "
+            "findings back now: another round would re-read unchanged code. "
+            "A later round runs only after fixes land."
+            % (latest.get("round", len(rounds)), latest["claims"])
+        )
+    return ""
+
+
 CLAUSES = (
     ("1", "unbounded fix domain", clause_unbounded_domain),
     ("2", "one design defect, reported N times", clause_one_shape),
@@ -324,6 +340,7 @@ CLAUSES = (
     ("5", "fixed-defect yield flat or falling", clause_flat_yield),
     ("6", "two rounds with nothing user-visible", clause_nothing_visible),
     ("7", "past the declared token ceiling", clause_budget),
+    ("8", "the round applied no fixes", clause_nothing_fixed),
 )
 
 

@@ -149,8 +149,12 @@ class TestClauseFourNetNegative(Harness):
         self.assertIn("3", out.split("not evaluated")[1].split("\n")[0])
 
     def test_a_round_that_fixed_nothing_does_not_divide_by_zero(self):
-        code, _ = self.run_cli([a_round(1, fixed=0, user_visible=0)])
-        self.assertEqual(code, round_yield.EXIT_CONTINUE)
+        # The round stops on clause 8, not on clause 4 and not
+        # on a ZeroDivisionError.
+        code, out = self.run_cli([a_round(1, fixed=0, user_visible=0)])
+        self.assertEqual(code, round_yield.EXIT_STOP)
+        self.assertNotIn("clause 4", out)
+        self.assertIn("clause 8", out)
 
 
 class TestClauseFiveFlatYield(Harness):
@@ -265,6 +269,57 @@ class TestClauseSevenBudget(Harness):
         self.assertNotIn("not recorded", out)
 
 
+class TestClauseEightNothingFixed(Harness):
+    """A review that hands findings back must still be able to stop.
+
+    Clauses 4 to 6 read fix counts, so before clause 8 a round
+    that raised findings and fixed none returned CONTINUE.
+    """
+
+    # The round-1 record from the agent run in which a
+    # findings-only review had no clause it could stop on.
+    FINDINGS_ONLY = {
+        "round": 1,
+        "claims": 4,
+        "fixed": 0,
+        "user_visible": 0,
+        "regressions": 0,
+        "unbounded_domain": False,
+        "shared_shape_ratio": 0.33,
+    }
+
+    def test_the_findings_only_record_stops_on_clause_eight(self):
+        code, out = self.run_cli([self.FINDINGS_ONLY])
+        self.assertEqual(code, round_yield.EXIT_STOP)
+        verdict = out.split("STOP")[1]
+        self.assertIn("clause 8: round 1 applied no fixes (4 claims", verdict)
+        self.assertIn("Hand the findings back", verdict)
+        self.assertIn("another round would re-read unchanged code", verdict)
+        self.assertIn("only after fixes land", verdict)
+        for number in range(1, 8):
+            self.assertNotIn("clause %d:" % number, verdict)
+
+    def test_explain_reports_it_like_the_others(self):
+        code, out = self.run_cli([self.FINDINGS_ONLY], "--explain")
+        self.assertEqual(code, round_yield.EXIT_STOP)
+        self.assertIn("  FIRED clause 8: the round applied no fixes", out)
+        self.assertIn("  quiet clause 4: over a quarter of the round", out)
+
+    def test_it_reads_the_latest_round_only(self):
+        # Fixes landed after a findings-only round, so the code
+        # changed and another round has something new to read.
+        code, out = self.run_cli([a_round(1, fixed=0), a_round(2)])
+        self.assertEqual(code, round_yield.EXIT_CONTINUE)
+        self.assertNotIn("clause 8", out)
+
+    def test_a_round_with_a_fix_is_quiet(self):
+        code, out = self.run_cli(
+            [a_round(1, fixed=1)], "--explain"
+        )
+        self.assertEqual(code, round_yield.EXIT_CONTINUE)
+        self.assertIn("quiet clause 8", out)
+
+
 class TestTheRecordMustBeUsable(Harness):
     def test_a_missing_count_is_refused_rather_than_guessed(self):
         code, out = self.run_cli([{"round": 1, "claims": 5, "fixed": 2}])
@@ -331,7 +386,7 @@ class TestTheExplainView(Harness):
         self.assertIn("5,400,000", out)
         self.assertIn("71 min", out)
         self.assertIn("cost per user-visible defect", out)
-        for number in range(1, 8):
+        for number in range(1, 9):
             self.assertIn("clause %d" % number, out)
 
     def test_an_unevaluated_clause_is_marked_distinctly(self):

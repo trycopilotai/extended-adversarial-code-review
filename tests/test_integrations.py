@@ -33,7 +33,7 @@ README = ROOT / "README.md"
 TRANSCRIPT = ROOT / "evidence" / "transcripts" / "round-yield-explain.txt"
 MANIFEST = ROOT / "evidence" / "demo-manifest.json"
 EXAMPLE = ROOT / "examples" / "rounds.json"
-CLAIM = "round_yield.py reports each of seven stopping clauses."
+CLAIM = "round_yield.py reports each of eight stopping clauses."
 EXIT_LINE = "Exit status: 0 continue, 1 stop, 2 unusable record."
 REPOSITORY = "https://github.com/trycopilotai/" + NAME
 PROVENANCE_INFIXES = (".gpt.", ".claude.", ".codex.")
@@ -218,9 +218,9 @@ class ReadmeTest(unittest.TestCase):
     def test_claim_is_on_its_own_line(self) -> None:
         self.assertIn(CLAIM, read(README).splitlines())
 
-    def test_transcript_reports_each_of_the_seven_clauses(self) -> None:
+    def test_transcript_reports_each_of_the_eight_clauses(self) -> None:
         program = load(PROGRAM, "round_yield")
-        self.assertEqual(len(program.CLAUSES), 7)
+        self.assertEqual(len(program.CLAUSES), 8)
         lines = read(TRANSCRIPT).splitlines()
         for number, summary, _ in program.CLAUSES:
             pattern = r"^  (FIRED|quiet|-----) clause %s: %s$" % (

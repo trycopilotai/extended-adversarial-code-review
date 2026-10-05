@@ -6,7 +6,10 @@
    and run correctness review instead.
 2. Declare the token ceiling and check whether the fix
    domain is enumerable.
-3. Quote the cost and get the go-ahead.
+3. Quote the cost and get the go-ahead. With no operator to
+   ask, record the declared ceiling in `rounds.json` anyway,
+   as `token_ceiling_per_high`, and proceed, so the budget
+   clause (7) can be evaluated.
 4. Start `rounds.json`.
 
 **Each round**
