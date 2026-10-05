@@ -16,12 +16,14 @@ this was derived from. The first two fire earliest and are
 worth the most; they are also the two whose inputs are
 easiest to leave out, so their absence is reported rather
 than passed over. Clause 8 was added later, for a review
-that hands its findings back instead of fixing them.
-Clauses 3 to 6 need a round that fixed something, and
-clauses 1, 2 and 7 fire only when their optional inputs are
-recorded and trip. Without clause 8, a round that fixed
-nothing and tripped none of clauses 1, 2 and 7 returned
-CONTINUE.
+that hands its findings back instead of fixing them. On
+that review's first round (no fixes, so no regressions and
+nothing user-visible), clause 3 has no repair to count,
+clause 4 skips a round with no fixes, clause 5 needs three
+rounds and clause 6 needs two. Unless clause 1, 2 or 7
+tripped, that round returned CONTINUE, and a second round
+over unchanged code was needed before clause 6 could stop
+the review.
 
 Usage:
 

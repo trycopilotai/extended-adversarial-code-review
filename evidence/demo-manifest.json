@@ -7,7 +7,7 @@
   },
   "program": {
     "path": "skills/extended-adversarial-code-review/scripts/round_yield.py",
-    "sha256": "d9c16567dd854d86f96590f8a5dd78e3a4c3493611d65e17178614c5dbc39c70"
+    "sha256": "b0bced29f81a6c8006a0fe7d7e5ea2d1f33d8898b929924c671db4e841065aa0"
   },
   "input": {
     "path": "examples/rounds.json",

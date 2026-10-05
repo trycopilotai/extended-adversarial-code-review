@@ -272,12 +272,16 @@ class TestClauseSevenBudget(Harness):
 class TestClauseEightNothingFixed(Harness):
     """A review that hands findings back must still be able to stop.
 
-    Clauses 4 to 6 read fix counts, so before clause 8 a round
-    that raised findings and fixed none returned CONTINUE.
+    Before clause 8, the first round of a review that raised
+    findings and fixed none could stop only on clause 1, 2 or
+    7: clause 4 skips a round with no fixes, and clauses 5 and
+    6 need more rounds. This record trips none of them, so it
+    returned CONTINUE.
     """
 
-    # The round-1 record from the agent run in which a
-    # findings-only review had no clause it could stop on.
+    # A round-1 record reconstructed from the agent run in
+    # which a findings-only review had no clause it could stop
+    # on; that run kept no rounds.json.
     FINDINGS_ONLY = {
         "round": 1,
         "claims": 4,

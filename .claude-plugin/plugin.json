@@ -1,6 +1,6 @@
 {
   "name": "extended-adversarial-code-review",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Decide whether a multi-round adversarial code review is worth running, shape each round so it terminates, and evaluate a checkable stopping rule from the per-round yield.",
   "author": {
     "name": "trycopilot.ai"
