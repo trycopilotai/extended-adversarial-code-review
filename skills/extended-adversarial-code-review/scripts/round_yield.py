@@ -16,9 +16,12 @@ this was derived from. The first two fire earliest and are
 worth the most; they are also the two whose inputs are
 easiest to leave out, so their absence is reported rather
 than passed over. Clause 8 was added later, for a review
-that hands its findings back instead of fixing them: every
-other clause reads fix counts, so without it a round that
-fixes nothing could never be told to stop.
+that hands its findings back instead of fixing them.
+Clauses 3 to 6 need a round that fixed something, and
+clauses 1, 2 and 7 fire only when their optional inputs are
+recorded and trip. Without clause 8, a round that fixed
+nothing and tripped none of clauses 1, 2 and 7 returned
+CONTINUE.
 
 Usage:
 
