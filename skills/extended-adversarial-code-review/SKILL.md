@@ -447,7 +447,9 @@ saved three rounds, roughly 8M tokens and 3 hours.**
 
 `scripts/round_yield.py` evaluates all seven from a small
 per-round JSON record. Keep the record; none of it is
-reconstructable afterwards.
+reconstructable afterwards. Record each round in
+`rounds.json` and run `round_yield.py` on it after every
+round; if it says STOP, stop.
 
 **Report non-convergence the first time you see it, not the
 fourth.** Two non-improving rounds are enough. The operator

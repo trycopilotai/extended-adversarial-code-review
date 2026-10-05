@@ -3,7 +3,7 @@
   "date": "2026-10-04",
   "skill": {
     "path": "skills/extended-adversarial-code-review/SKILL.md",
-    "sha256": "eff09e1eacb36d56765d4cb2f124e0253ce574c71dbd53bf16cf3edd5f2a0961"
+    "sha256": "d45bf58f2566bae439dd5a049386fa51c97373e3e034d11a42a39133cbbfb711"
   },
   "program": {
     "path": "skills/extended-adversarial-code-review/scripts/round_yield.py",
