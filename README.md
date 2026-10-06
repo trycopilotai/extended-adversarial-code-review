@@ -85,7 +85,7 @@ fails.
 
 ```sh
 set -eu
-release=v0.1.7
+release=v0.1.8
 install_target="$HOME/.claude/skills/extended-adversarial-code-review"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -122,7 +122,7 @@ the block above is `install_target`.
 
 ```sh
 set -eu
-release=v0.1.7
+release=v0.1.8
 install_target="$HOME/.agents/skills/extended-adversarial-code-review"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -208,7 +208,11 @@ message says all four defects were reproduced twice, but
 recorded `shared_shape_ratio` 0.5 for four findings at four
 distinct fix sites (clause 2 stays quiet either way). The
 manifest lists both under `inaccuracies`. `scripts/render_invocation.py`
-rendered each transcript from the client's raw log; the
+rendered each transcript from the client's raw log. It
+replaces paths and the host name in string values only, not
+in dictionary keys; clips each tool argument and each message
+between calls at 400 characters; and reproduces the prompt
+and the final message with trailing newlines trimmed. The
 manifest's `invocations` list records the client, model,
 prompt, path transforms and hashes.
 

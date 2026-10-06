@@ -4,12 +4,16 @@
 Reads the JSON lines a client wrote while it ran the skill and
 prints the prompt, every tool call (name and arguments), each
 call's status where the log records one, any text the agent
-wrote between calls, and the final message verbatim.
+wrote between calls, and the final message.
 
 Each tool argument and each message the agent wrote between
 calls is printed on one line, JSON-escaped, and clipped at
 LIMIT characters with a note of how many were cut. The prompt
-and the final message are never clipped.
+and the final message are not clipped or escaped; each is
+reproduced with its trailing newlines trimmed and nothing else
+changed apart from the transforms below. The final message is
+the `result` text of a Claude Code log and the last
+`agent_message` of a Codex log.
 
 Supported logs:
 
@@ -25,9 +29,13 @@ Usage:
 
 Every value the transforms use is passed on the command line, so
 the same raw log and the same arguments always give the same
-bytes. The transforms, applied in this order to every string in
-the log before anything is clipped, each to a whole path prefix (or a whole host name) and
-never to part of a longer name:
+bytes. The transforms are applied, in this order, to the prompt
+and to every string value in each decoded log event (including
+strings nested in lists and objects) before anything is clipped.
+They are not applied to dictionary keys, so a path or host name
+that appears only as a key in the log is printed unchanged.
+Each replaces a whole path prefix (or a whole host name), never
+part of a longer name:
 
     replace-scratch-root   /private/tmp/claude-<uid>/<slug>  -> /scratch
                            (and the same under /tmp/)
@@ -36,8 +44,15 @@ never to part of a longer name:
     replace-home           --home                            -> ~
     replace-hostname       --hostname, and its first label   -> host
 
-Nothing else is changed. Tool results are not reproduced; only
-their status is.
+Apart from the transforms, the clipping and escaping above and
+the trimmed trailing newlines, nothing is changed. What the
+renderer leaves out: tool results (only their status is
+printed); in a Claude Code log, thinking blocks, empty text
+blocks, user content other than tool results, and every event
+other than `system` `init`, `assistant`, `user` and `result`;
+in a Codex log, every event other than `thread.started`,
+`item.completed` and `turn.completed`. A completed Codex item
+of an unknown type is printed by type name only.
 
 Standard library only.
 """
@@ -175,7 +190,10 @@ RENDERERS = {"claude-code": render_claude_code, "codex": render_codex}
 
 
 def deep(value, transforms):
-    """Apply the transforms to every string in a decoded event."""
+    """Apply the transforms to every string value in a decoded event.
+
+    Dictionary keys are left as they are.
+    """
     if isinstance(value, str):
         return transforms(value)
     if isinstance(value, list):

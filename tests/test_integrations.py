@@ -391,6 +391,20 @@ class RendererTest(unittest.TestCase):
         self.assertEqual(t("on box.local and box"), "on host and host")
         self.assertEqual(t("boxes"), "boxes")
 
+    def test_transforms_reach_string_values_but_not_keys(self) -> None:
+        event = {"/h/u/fix": ["/h/u/fix/a", {"k": "box.local"}], "n": 1}
+        self.assertEqual(
+            self.module.deep(event, self.transforms),
+            {"/h/u/fix": ["/work/a", {"k": "host"}], "n": 1},
+        )
+
+    def test_prompt_and_final_message_lose_only_trailing_newlines(self) -> None:
+        events = [{"type": "result", "result": "  a\n\n b\n\n"}]
+        raw = json.dumps(events[0])
+        text = self.module.render("claude-code", "p \"q\"\n\n", raw, self.transforms)
+        self.assertIn("## prompt\n\np \"q\"\n\n## tool calls", text)
+        self.assertTrue(text.endswith("## final message\n\n  a\n\n b\n"))
+
     def test_claude_code_log(self) -> None:
         events = [
             {"type": "system", "subtype": "init", "claude_code_version": "9.9.9", "model": "m"},
