@@ -2,9 +2,10 @@
 """Render a raw agent-client log as a readable invocation transcript.
 
 Reads the JSON lines a client wrote while it ran the skill and
-prints the prompt, every tool call (name and arguments), each
-call's status where the log records one, any text the agent
-wrote between calls, and the final message.
+prints the prompt, each tool call it recognises (name and
+arguments; a Codex item of an unknown type by type name only),
+each call's status where the log records one, any text the
+agent wrote between calls, and the final message.
 
 Each tool argument and each message the agent wrote between
 calls is printed on one line, JSON-escaped, and clipped at
