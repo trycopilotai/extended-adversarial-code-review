@@ -6,6 +6,11 @@ prints the prompt, every tool call (name and arguments), each
 call's status where the log records one, any text the agent
 wrote between calls, and the final message verbatim.
 
+Each tool argument and each message the agent wrote between
+calls is printed on one line, JSON-escaped, and clipped at
+LIMIT characters with a note of how many were cut. The prompt
+and the final message are never clipped.
+
 Supported logs:
 
     claude-code   `claude --print --verbose --output-format stream-json`
@@ -185,7 +190,13 @@ def render(client, prompt, raw, transforms):
     header, body, final = RENDERERS[client](events)
     prompt = transforms(prompt)
     out = ["client: " + client, *header, "", "## prompt", "", prompt.rstrip("\n"), ""]
-    out += ["## tool calls (arguments clipped at %d characters)" % LIMIT, "", *body, ""]
+    out += [
+        "## tool calls and agent text (each argument and message clipped at %d characters)"
+        % LIMIT,
+        "",
+        *body,
+        "",
+    ]
     out += ["## final message", "", (final or "").rstrip("\n"), ""]
     return "\n".join(out)
 

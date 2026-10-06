@@ -42,10 +42,19 @@ private channel.
   repository root and runs the program with the arguments
   recorded in the transcript. `tests/test_round_yield.py`
   writes small JSON files to the system temporary directory.
+  `scripts/render_invocation.py` reads one raw client log and
+  one prompt file named on its command line and prints a
+  transcript to standard output. It writes nothing else,
+  starts no process and opens no network connection.
+  `tests/test_integrations.py` also loads it and renders small
+  logs held in memory.
 - **Disclosure in the shipped bytes.** The guidance reports
   figures from a private review episode. Anything in this
   repository that identifies the reviewed program, a person,
-  or a private system is a valid report.
+  or a private system is a valid report. That includes a
+  path, home directory or host name that survived
+  `scripts/render_invocation.py`'s replacements into a
+  transcript under `evidence/transcripts/`.
 
 ## What is out of scope
 

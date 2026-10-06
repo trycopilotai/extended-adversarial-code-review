@@ -85,7 +85,7 @@ fails.
 
 ```sh
 set -eu
-release=v0.1.6
+release=v0.1.7
 install_target="$HOME/.claude/skills/extended-adversarial-code-review"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -122,7 +122,7 @@ the block above is `install_target`.
 
 ```sh
 set -eu
-release=v0.1.6
+release=v0.1.7
 install_target="$HOME/.agents/skills/extended-adversarial-code-review"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -201,7 +201,13 @@ fixture, not a benchmark.
   round, and stopped.
 
 Neither prompt asked for fixes, so neither run applied
-a fix or reached a second round. `scripts/render_invocation.py`
+a fix or reached a second round. The Claude Code transcript
+is the agent's own account and is not corrected: its final
+message says all four defects were reproduced twice, but
+`owned_by(None)` was reproduced once, by its subagent; and it
+recorded `shared_shape_ratio` 0.5 for four findings at four
+distinct fix sites (clause 2 stays quiet either way). The
+manifest lists both under `inaccuracies`. `scripts/render_invocation.py`
 rendered each transcript from the client's raw log; the
 manifest's `invocations` list records the client, model,
 prompt, path transforms and hashes.

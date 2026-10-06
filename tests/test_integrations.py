@@ -341,6 +341,8 @@ class InvocationTest(unittest.TestCase):
             self.assertEqual(record["transforms"], INVOCATION_TRANSFORMS)
             self.assertRegex(record["raw_output_sha256"], r"^[0-9a-f]{64}$")
             self.assertTrue(record["outcome"])
+            for note in record.get("inaccuracies", []):
+                self.assertTrue(note.strip())
 
     def test_invocation_text_matches_the_client(self) -> None:
         forms = {"Claude Code": "/" + NAME, "Codex": "$" + NAME}
@@ -406,6 +408,7 @@ class RendererTest(unittest.TestCase):
         self.assertIn("model: m\n", text)
         self.assertIn("    command: cat /work/" + "x" * 390 + " ...[", text)
         self.assertIn("  < error (exit 1)\n", text)
+        self.assertIn("each argument and message clipped at 400 characters", text)
         self.assertTrue(text.endswith("## final message\n\ndone\nSTOP\n"))
 
     def test_codex_log(self) -> None:
@@ -413,6 +416,7 @@ class RendererTest(unittest.TestCase):
             {"type": "thread.started", "thread_id": "t"},
             {"type": "item.completed", "item": {"type": "command_execution",
              "command": "python3 /h/u/fix/r.py", "exit_code": 1}},
+            {"type": "item.completed", "item": {"type": "agent_message", "text": "y" * 450}},
             {"type": "item.completed", "item": {"type": "agent_message", "text": "STOP"}},
             {"type": "turn.completed", "usage": {"output_tokens": 3}},
         ]
@@ -420,6 +424,7 @@ class RendererTest(unittest.TestCase):
         text = self.module.render("codex", "Use $" + NAME, raw, self.transforms)
         self.assertIn("    command: python3 /work/r.py\n  < exit 1\n", text)
         self.assertIn("usage output_tokens: 3\n", text)
+        self.assertIn("agent: " + "y" * 400 + " ...[50 more characters]\n", text)
         self.assertTrue(text.endswith("## final message\n\nSTOP\n"))
 
 
@@ -458,6 +463,11 @@ class SupportFilesTest(unittest.TestCase):
             REPOSITORY + "/security/advisories/new",
             read(ROOT / "SECURITY.md"),
         )
+
+    def test_security_scope_names_every_script(self) -> None:
+        text = read(ROOT / "SECURITY.md")
+        for path in sorted((ROOT / "scripts").glob("*.py")):
+            self.assertIn("`scripts/" + path.name + "`", text)
 
     def test_contributing_names_the_check_command(self) -> None:
         self.assertIn("make check", read(ROOT / "CONTRIBUTING.md"))

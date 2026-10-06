@@ -41,7 +41,7 @@
       "date": "2026-10-05",
       "transcript": {
         "path": "evidence/transcripts/2026-10-05-claude-code-invocation.txt",
-        "sha256": "d379b4d05c171f3208faa85ce2547a88f6f5772ca5be18e7887e7d0f7c569d85"
+        "sha256": "feb222a1aea61b702267bdba5b035f53f94467c8d5cb8ac3df52cdacb78f524c"
       },
       "raw_output_sha256": "5729ac7267f79b1caf7d245f732152034f181c1e54410ba57239230cf33ab948",
       "raw_output_format": "claude --print --verbose --output-format stream-json",
@@ -54,7 +54,11 @@
       ],
       "invoked_the_skill": true,
       "published": true,
-      "outcome": "Loaded the skill with a Skill tool call, ran one round that reported all three planted defects plus one unplanted one (owned_by(None) raises), recorded rounds.json, ran round_yield.py --explain, got STOP on clause 8 (exit 1), and stopped."
+      "outcome": "Loaded the skill with a Skill tool call, ran one round that reported all three planted defects plus one unplanted one (owned_by(None) raises), recorded rounds.json, ran round_yield.py --explain, got STOP on clause 8 (exit 1), and stopped.",
+      "inaccuracies": [
+        "The agent's final message says all four defects were reproduced twice; the transcript shows owned_by(None) reproduced once, by the subagent, after the parent's own reproductions.",
+        "The agent recorded shared_shape_ratio 0.5 in rounds.json while reporting four findings at four distinct fix sites; clause 2 stayed quiet either way."
+      ]
     },
     {
       "product": "Codex",
@@ -68,7 +72,7 @@
       "date": "2026-10-05",
       "transcript": {
         "path": "evidence/transcripts/2026-10-05-codex-invocation.txt",
-        "sha256": "4d77b646f96cc93723fc835515bb9255f75805a269145717acc9a849c6a82148"
+        "sha256": "4a42457b95bf3fbf5b6b5b159837b1993a94b6b49a8ff0eeb45ea71742d50d96"
       },
       "raw_output_sha256": "a184406a3fc1342730db2672821abac37e76e52e300959fb8a2521ee402adc5f",
       "raw_output_format": "codex exec --json",
