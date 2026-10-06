@@ -25,9 +25,10 @@ a recorded run of the program on the synthetic record in
 
 **Not measured, stated up front.**
 
-- No agent invoked this skill to produce the evidence here.
-  The transcript is the bundled program, run by hand on
-  synthetic input.
+- No agent invoked this skill to produce the demo. Its
+  transcript is the bundled program, run by hand on
+  synthetic input. The agent invocations under Evidence are
+  separate.
 - The figures quoted inside `SKILL.md`, such as the
   per-round table and the token counts, come from one
   private review episode. Apart from four per-round rows
@@ -35,8 +36,10 @@ a recorded run of the program on the synthetic record in
   in this repository, so nothing here lets you check them.
 - Whether following the guidance shortens a real review loop
   has not been measured.
-- Neither Claude Code nor Codex was started to confirm that
-  the invocation names below resolve.
+- The install blocks below were not run for the agent
+  invocations. Claude Code loaded the repository as a plugin
+  directory and Codex loaded a project copy under
+  `.agents/skills/`.
 
 ## What is in it
 
@@ -82,7 +85,7 @@ fails.
 
 ```sh
 set -eu
-release=v0.1.5
+release=v0.1.6
 install_target="$HOME/.claude/skills/extended-adversarial-code-review"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -119,7 +122,7 @@ the block above is `install_target`.
 
 ```sh
 set -eu
-release=v0.1.5
+release=v0.1.6
 install_target="$HOME/.agents/skills/extended-adversarial-code-review"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -179,6 +182,29 @@ is unedited.
 `make check` runs the program's own tests and a packaging
 contract that ties this file, both plugin manifests, the
 transcript and the demo images to each other.
+
+### Agent invocations
+
+Each client ran the skill once on the same synthetic
+fixture: a small Python module with three planted defects
+and tests that pass. This is one run per client on one
+fixture, not a benchmark.
+
+- [`evidence/transcripts/2026-10-05-claude-code-invocation.txt`](evidence/transcripts/2026-10-05-claude-code-invocation.txt):
+  Claude Code 2.1.220 loaded the skill, reported the three
+  planted defects and one more, ran `round_yield.py`, got
+  STOP on clause 8 after one round with no fixes, and
+  stopped.
+- [`evidence/transcripts/2026-10-05-codex-invocation.txt`](evidence/transcripts/2026-10-05-codex-invocation.txt):
+  Codex 0.146.0 read the skill, reported the three planted
+  defects, ran `round_yield.py`, got the same STOP after one
+  round, and stopped.
+
+Neither prompt asked for fixes, so neither run applied
+a fix or reached a second round. `scripts/render_invocation.py`
+rendered each transcript from the client's raw log; the
+manifest's `invocations` list records the client, model,
+prompt, path transforms and hashes.
 
 ## Contributing
 

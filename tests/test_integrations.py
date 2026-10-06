@@ -33,6 +33,14 @@ README = ROOT / "README.md"
 TRANSCRIPT = ROOT / "evidence" / "transcripts" / "round-yield-explain.txt"
 MANIFEST = ROOT / "evidence" / "demo-manifest.json"
 EXAMPLE = ROOT / "examples" / "rounds.json"
+RENDERER = ROOT / "scripts" / "render_invocation.py"
+INVOCATION_TRANSFORMS = [
+    "replace-scratch-root",
+    "replace-plugin-root",
+    "replace-capture-root",
+    "replace-home",
+    "replace-hostname",
+]
 CLAIM = "round_yield.py reports each of eight stopping clauses."
 EXIT_LINE = "Exit status: 0 continue, 1 stop, 2 unusable record."
 REPOSITORY = "https://github.com/trycopilotai/" + NAME
@@ -318,6 +326,101 @@ class EvidenceTest(unittest.TestCase):
     def test_example_says_it_is_synthetic(self) -> None:
         record = json.loads(read(EXAMPLE))
         self.assertIn("This is synthetic example material.", record["note"])
+
+
+class InvocationTest(unittest.TestCase):
+    def records(self) -> list:
+        return json.loads(read(MANIFEST))["invocations"]
+
+    def test_one_published_invocation_per_client(self) -> None:
+        records = self.records()
+        published = [r for r in records if r.get("published", True)]
+        self.assertEqual(sorted(r["product"] for r in published), ["Claude Code", "Codex"])
+        for record in records:
+            self.assertIs(record["invoked_the_skill"], True)
+            self.assertEqual(record["transforms"], INVOCATION_TRANSFORMS)
+            self.assertRegex(record["raw_output_sha256"], r"^[0-9a-f]{64}$")
+            self.assertTrue(record["outcome"])
+
+    def test_invocation_text_matches_the_client(self) -> None:
+        forms = {"Claude Code": "/" + NAME, "Codex": "$" + NAME}
+        for record in self.records():
+            self.assertEqual(record["invocation"], forms[record["product"]])
+            self.assertIn(record["invocation"], record["prompt"])
+
+    def test_transcript_hashes_match_the_manifest(self) -> None:
+        listed = set()
+        for record in self.records():
+            path = ROOT / record["transcript"]["path"]
+            self.assertEqual(record["transcript"]["sha256"], sha256(path))
+            listed.add(path.name)
+            text = read(path)
+            self.assertIn(record["prompt"], text)
+            self.assertIn("\n## final message\n", text)
+        on_disk = {p.name for p in TRANSCRIPT.parent.glob("*-invocation.txt")}
+        self.assertEqual(listed, on_disk)
+
+    def test_readme_links_each_transcript(self) -> None:
+        text = read(README)
+        for record in self.records():
+            self.assertIn("](" + record["transcript"]["path"] + ")", text)
+
+    def test_transcripts_name_only_the_replaced_roots(self) -> None:
+        absolute = re.compile(r"(?<![\w.~/])/(?:private|tmp|var|home)/")
+        for path in TRANSCRIPT.parent.glob("*-invocation.txt"):
+            self.assertEqual(absolute.findall(read(path)), [], path.name)
+
+
+class RendererTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.module = load(RENDERER, "render_invocation")
+        self.transforms = self.module.Transforms(
+            "/h/u/fix", ["/h/u/fix/.agents/skills/" + NAME, "/h/u/clone"], "/h/u", "box.local"
+        )
+
+    def test_transforms_replace_whole_prefixes_in_order(self) -> None:
+        t = self.transforms
+        self.assertEqual(t("/h/u/fix/.agents/skills/%s/SKILL.md" % NAME), "/plugin/SKILL.md")
+        self.assertEqual(t("/h/u/clone/skills/x"), "/plugin/skills/x")
+        self.assertEqual(t("cd /h/u/fix && ls"), "cd /work && ls")
+        self.assertEqual(t("/h/u/fixture/a"), "~/fixture/a")
+        self.assertEqual(t("/h/u2/a"), "/h/u2/a")
+        self.assertEqual(t("/private/tmp/claude-0/-h-u-fix/t/out"), "/scratch/t/out")
+        self.assertEqual(t("on box.local and box"), "on host and host")
+        self.assertEqual(t("boxes"), "boxes")
+
+    def test_claude_code_log(self) -> None:
+        events = [
+            {"type": "system", "subtype": "init", "claude_code_version": "9.9.9", "model": "m"},
+            {"type": "assistant", "message": {"content": [
+                {"type": "tool_use", "id": "a", "name": "Bash",
+                 "input": {"command": "cat /h/u/fix/" + "x" * 500}}]}},
+            {"type": "user", "message": {"content": [
+                {"type": "tool_result", "tool_use_id": "a", "is_error": True,
+                 "content": "Exit code 1\nboom"}]}},
+            {"type": "result", "subtype": "success", "num_turns": 2,
+             "duration_ms": 5, "total_cost_usd": 0.5, "result": "done\nSTOP"},
+        ]
+        raw = "\n".join(json.dumps(e) for e in events)
+        text = self.module.render("claude-code", "Use /" + NAME, raw, self.transforms)
+        self.assertIn("model: m\n", text)
+        self.assertIn("    command: cat /work/" + "x" * 390 + " ...[", text)
+        self.assertIn("  < error (exit 1)\n", text)
+        self.assertTrue(text.endswith("## final message\n\ndone\nSTOP\n"))
+
+    def test_codex_log(self) -> None:
+        events = [
+            {"type": "thread.started", "thread_id": "t"},
+            {"type": "item.completed", "item": {"type": "command_execution",
+             "command": "python3 /h/u/fix/r.py", "exit_code": 1}},
+            {"type": "item.completed", "item": {"type": "agent_message", "text": "STOP"}},
+            {"type": "turn.completed", "usage": {"output_tokens": 3}},
+        ]
+        raw = "\n".join(json.dumps(e) for e in events)
+        text = self.module.render("codex", "Use $" + NAME, raw, self.transforms)
+        self.assertIn("    command: python3 /work/r.py\n  < exit 1\n", text)
+        self.assertIn("usage output_tokens: 3\n", text)
+        self.assertTrue(text.endswith("## final message\n\nSTOP\n"))
 
 
 class DemoTest(unittest.TestCase):

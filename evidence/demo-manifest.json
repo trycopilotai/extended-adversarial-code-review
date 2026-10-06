@@ -28,5 +28,60 @@
     "sha256": "cc00784413c495617663e75b26dee72e7de94bead35fcba8ebfab7298a3c36ab",
     "edited": false,
     "note": "The file is the capture, byte for byte. The capture wrapper wrote each command line before running it and wrote the exit status line from the program's exit status; everything between those lines is the program's standard output."
-  }
+  },
+  "invocations": [
+    {
+      "product": "Claude Code",
+      "version": "2.1.220",
+      "model": "claude-sonnet-5",
+      "invocation": "/extended-adversarial-code-review",
+      "prompt": "Use the /extended-adversarial-code-review skill to run a bounded adversarial review of the change review-base..review-head in this git repository: a small Python module, inventory/, and its unit tests in tests/. Run at most two review rounds. Use the skill's bundled round_yield program to decide whether the review should stop, and end with a short report that says whether to stop and quotes the program's verdict. Write your findings to review.md in this directory (the repository root). Stay inside this directory: do not read, write or run anything outside it, except the skill's own files. Do not commit, push, or contact any remote. Work autonomously; there is no operator available to answer questions during this run.",
+      "loaded_from": "the repository at v0.1.5 passed as --plugin-dir",
+      "fixture": "A synthetic git repository: a small Python module (inventory/) and its unit tests, with three planted defects in the reviewed range review-base..review-head (a pagination floor division, a missing None check in rename, a shared scratch file in save); all eight tests pass on review-head.",
+      "date": "2026-10-05",
+      "transcript": {
+        "path": "evidence/transcripts/2026-10-05-claude-code-invocation.txt",
+        "sha256": "d379b4d05c171f3208faa85ce2547a88f6f5772ca5be18e7887e7d0f7c569d85"
+      },
+      "raw_output_sha256": "5729ac7267f79b1caf7d245f732152034f181c1e54410ba57239230cf33ab948",
+      "raw_output_format": "claude --print --verbose --output-format stream-json",
+      "transforms": [
+        "replace-scratch-root",
+        "replace-plugin-root",
+        "replace-capture-root",
+        "replace-home",
+        "replace-hostname"
+      ],
+      "invoked_the_skill": true,
+      "published": true,
+      "outcome": "Loaded the skill with a Skill tool call, ran one round that reported all three planted defects plus one unplanted one (owned_by(None) raises), recorded rounds.json, ran round_yield.py --explain, got STOP on clause 8 (exit 1), and stopped."
+    },
+    {
+      "product": "Codex",
+      "version": "0.146.0",
+      "model": "gpt-5.6-sol",
+      "model_source": "the client's session log for the same thread; the --json stream does not name the model",
+      "invocation": "$extended-adversarial-code-review",
+      "prompt": "Use the $extended-adversarial-code-review skill to run a bounded adversarial review of the change review-base..review-head in this git repository: a small Python module, inventory/, and its unit tests in tests/. Run at most two review rounds. Use the skill's bundled round_yield program to decide whether the review should stop, and end with a short report that says whether to stop and quotes the program's verdict. Write your findings to review.md in this directory (the repository root). Stay inside this directory: do not read, write or run anything outside it, except the skill's own files. Do not commit, push, or contact any remote. Work autonomously; there is no operator available to answer questions during this run.",
+      "loaded_from": "a copy of skills/extended-adversarial-code-review/ at v0.1.5 committed in the fixture as .agents/skills/extended-adversarial-code-review/",
+      "fixture": "A synthetic git repository: a small Python module (inventory/) and its unit tests, with three planted defects in the reviewed range review-base..review-head (a pagination floor division, a missing None check in rename, a shared scratch file in save); all eight tests pass on review-head.",
+      "date": "2026-10-05",
+      "transcript": {
+        "path": "evidence/transcripts/2026-10-05-codex-invocation.txt",
+        "sha256": "4d77b646f96cc93723fc835515bb9255f75805a269145717acc9a849c6a82148"
+      },
+      "raw_output_sha256": "a184406a3fc1342730db2672821abac37e76e52e300959fb8a2521ee402adc5f",
+      "raw_output_format": "codex exec --json",
+      "transforms": [
+        "replace-scratch-root",
+        "replace-plugin-root",
+        "replace-capture-root",
+        "replace-home",
+        "replace-hostname"
+      ],
+      "invoked_the_skill": true,
+      "published": true,
+      "outcome": "Read .agents/skills/extended-adversarial-code-review/SKILL.md, ran one round that reported all three planted defects, recorded rounds.json, ran round_yield.py --explain, got STOP on clause 8 (exit 1), and stopped."
+    }
+  ]
 }
