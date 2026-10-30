@@ -71,9 +71,7 @@ class TestClauseOneUnboundedDomain(Harness):
     def test_it_fires_on_the_latest_round_only(self):
         # An earlier round whose domain was unbounded, since
         # redesigned, is not a reason to stop now.
-        code, _ = self.run_cli(
-            [a_round(1, unbounded_domain=True), a_round(2)]
-        )
+        code, _ = self.run_cli([a_round(1, unbounded_domain=True), a_round(2)])
         self.assertEqual(code, round_yield.EXIT_CONTINUE)
 
     def test_omitting_it_is_reported_not_passed_over(self):
@@ -317,9 +315,7 @@ class TestClauseEightNothingFixed(Harness):
         self.assertNotIn("clause 8", out)
 
     def test_a_round_with_a_fix_is_quiet(self):
-        code, out = self.run_cli(
-            [a_round(1, fixed=1)], "--explain"
-        )
+        code, out = self.run_cli([a_round(1, fixed=1)], "--explain")
         self.assertEqual(code, round_yield.EXIT_CONTINUE)
         self.assertIn("quiet clause 8", out)
 
@@ -431,18 +427,51 @@ class TestAgainstTheMeasuredEpisode(Harness):
     """
 
     EPISODE = [
-        {"round": 4, "claims": 40, "fixed": 17, "user_visible": 6,
-         "regressions": 2, "unbounded_domain": True,
-         "shared_shape_ratio": 0.4, "tokens": 2_757_427, "minutes": 35.3},
-        {"round": 5, "claims": 40, "fixed": 23, "user_visible": 7,
-         "regressions": 1, "unbounded_domain": True,
-         "shared_shape_ratio": 0.65, "tokens": 2_772_379, "minutes": 36.1},
-        {"round": 6, "claims": 45, "fixed": 14, "user_visible": 5,
-         "regressions": 3, "high_regressions": 3, "unbounded_domain": True,
-         "shared_shape_ratio": 0.65, "tokens": 2_633_390, "minutes": 41.6},
-        {"round": 7, "claims": 37, "fixed": 14, "user_visible": 5,
-         "regressions": 5, "unbounded_domain": True,
-         "shared_shape_ratio": 0.65, "tokens": 2_746_818, "minutes": 31.2},
+        {
+            "round": 4,
+            "claims": 40,
+            "fixed": 17,
+            "user_visible": 6,
+            "regressions": 2,
+            "unbounded_domain": True,
+            "shared_shape_ratio": 0.4,
+            "tokens": 2_757_427,
+            "minutes": 35.3,
+        },
+        {
+            "round": 5,
+            "claims": 40,
+            "fixed": 23,
+            "user_visible": 7,
+            "regressions": 1,
+            "unbounded_domain": True,
+            "shared_shape_ratio": 0.65,
+            "tokens": 2_772_379,
+            "minutes": 36.1,
+        },
+        {
+            "round": 6,
+            "claims": 45,
+            "fixed": 14,
+            "user_visible": 5,
+            "regressions": 3,
+            "high_regressions": 3,
+            "unbounded_domain": True,
+            "shared_shape_ratio": 0.65,
+            "tokens": 2_633_390,
+            "minutes": 41.6,
+        },
+        {
+            "round": 7,
+            "claims": 37,
+            "fixed": 14,
+            "user_visible": 5,
+            "regressions": 5,
+            "unbounded_domain": True,
+            "shared_shape_ratio": 0.65,
+            "tokens": 2_746_818,
+            "minutes": 31.2,
+        },
     ]
 
     def test_clause_one_would_have_stopped_it_at_round_four(self):
@@ -476,8 +505,13 @@ class TestAgainstTheMeasuredEpisode(Harness):
     def test_the_full_episode_fires_everything_that_applies(self):
         code, out = self.run_cli(self.EPISODE, "--explain")
         self.assertEqual(code, round_yield.EXIT_STOP)
-        for state in ("FIRED clause 1", "FIRED clause 2", "----- clause 3",
-                      "FIRED clause 4", "FIRED clause 5"):
+        for state in (
+            "FIRED clause 1",
+            "FIRED clause 2",
+            "----- clause 3",
+            "FIRED clause 4",
+            "FIRED clause 5",
+        ):
             self.assertIn(state, out)
         self.assertIn("not evaluated: clause(s) 3, 7", out)
         # It never went two rounds without a user-visible fix,

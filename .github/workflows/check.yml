@@ -31,5 +31,7 @@ jobs:
 
       # No install step on purpose. Both suites use the
       # standard library only.
-      - name: Run the stopping-rule tests and the packaging contract
+      - name:
+          Run the stopping-rule tests and the packaging
+          contract
         run: make check
