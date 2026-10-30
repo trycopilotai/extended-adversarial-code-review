@@ -27,9 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TRANSCRIPT = ROOT / "evidence" / "transcripts" / "round-yield-explain.txt"
 DEMO = ROOT / "assets" / "demo.svg"
 POSTER = ROOT / "assets" / "poster.svg"
-SOURCE_LABEL = (
-    "Reconstructed from evidence/transcripts/round-yield-explain.txt"
-)
+SOURCE_LABEL = "Reconstructed from evidence/transcripts/round-yield-explain.txt"
 
 WIDTH = 1280
 HEIGHT = 680
@@ -88,8 +86,7 @@ def steps_from_transcript(transcript: str) -> tuple[str, list[list[str]]]:
     clauses = block_after(lines, "clauses")
     if len(clauses) != CLAUSE_COUNT + 1:
         raise ValueError(
-            "expected %d clause lines, found %d"
-            % (CLAUSE_COUNT, len(clauses) - 1)
+            "expected %d clause lines, found %d" % (CLAUSE_COUNT, len(clauses) - 1)
         )
     if "STOP" in lines:
         verdict = "STOP"
@@ -98,9 +95,7 @@ def steps_from_transcript(transcript: str) -> tuple[str, list[list[str]]]:
     else:
         raise ValueError("the transcript carries no verdict")
     tail = lines[-2:]
-    if not tail[0].startswith("$ echo") or not tail[1].startswith(
-        "exit status: "
-    ):
+    if not tail[0].startswith("$ echo") or not tail[1].startswith("exit status: "):
         raise ValueError("the transcript does not end with the exit status")
     return command, [curve, clauses, [verdict] + tail]
 
@@ -119,9 +114,11 @@ def line_colour(line: str) -> str:
 
 
 def text_element(line: str, baseline: int) -> str:
-    return (
-        '    <text x="%d" y="%d" fill="%s" xml:space="preserve">%s</text>'
-        % (MARGIN_X, baseline, line_colour(line), html.escape(line))
+    return '    <text x="%d" y="%d" fill="%s" xml:space="preserve">%s</text>' % (
+        MARGIN_X,
+        baseline,
+        line_colour(line),
+        html.escape(line),
     )
 
 

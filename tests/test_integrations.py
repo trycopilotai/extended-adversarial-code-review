@@ -335,7 +335,9 @@ class InvocationTest(unittest.TestCase):
     def test_one_published_invocation_per_client(self) -> None:
         records = self.records()
         published = [r for r in records if r.get("published", True)]
-        self.assertEqual(sorted(r["product"] for r in published), ["Claude Code", "Codex"])
+        self.assertEqual(
+            sorted(r["product"] for r in published), ["Claude Code", "Codex"]
+        )
         for record in records:
             self.assertIs(record["invoked_the_skill"], True)
             self.assertEqual(record["transforms"], INVOCATION_TRANSFORMS)
@@ -377,12 +379,17 @@ class RendererTest(unittest.TestCase):
     def setUp(self) -> None:
         self.module = load(RENDERER, "render_invocation")
         self.transforms = self.module.Transforms(
-            "/h/u/fix", ["/h/u/fix/.agents/skills/" + NAME, "/h/u/clone"], "/h/u", "box.local"
+            "/h/u/fix",
+            ["/h/u/fix/.agents/skills/" + NAME, "/h/u/clone"],
+            "/h/u",
+            "box.local",
         )
 
     def test_transforms_replace_whole_prefixes_in_order(self) -> None:
         t = self.transforms
-        self.assertEqual(t("/h/u/fix/.agents/skills/%s/SKILL.md" % NAME), "/plugin/SKILL.md")
+        self.assertEqual(
+            t("/h/u/fix/.agents/skills/%s/SKILL.md" % NAME), "/plugin/SKILL.md"
+        )
         self.assertEqual(t("/h/u/clone/skills/x"), "/plugin/skills/x")
         self.assertEqual(t("cd /h/u/fix && ls"), "cd /work && ls")
         self.assertEqual(t("/h/u/fixture/a"), "~/fixture/a")
@@ -401,21 +408,52 @@ class RendererTest(unittest.TestCase):
     def test_prompt_and_final_message_lose_only_trailing_newlines(self) -> None:
         events = [{"type": "result", "result": "  a\n\n b\n\n"}]
         raw = json.dumps(events[0])
-        text = self.module.render("claude-code", "p \"q\"\n\n", raw, self.transforms)
-        self.assertIn("## prompt\n\np \"q\"\n\n## tool calls", text)
+        text = self.module.render("claude-code", 'p "q"\n\n', raw, self.transforms)
+        self.assertIn('## prompt\n\np "q"\n\n## tool calls', text)
         self.assertTrue(text.endswith("## final message\n\n  a\n\n b\n"))
 
     def test_claude_code_log(self) -> None:
         events = [
-            {"type": "system", "subtype": "init", "claude_code_version": "9.9.9", "model": "m"},
-            {"type": "assistant", "message": {"content": [
-                {"type": "tool_use", "id": "a", "name": "Bash",
-                 "input": {"command": "cat /h/u/fix/" + "x" * 500}}]}},
-            {"type": "user", "message": {"content": [
-                {"type": "tool_result", "tool_use_id": "a", "is_error": True,
-                 "content": "Exit code 1\nboom"}]}},
-            {"type": "result", "subtype": "success", "num_turns": 2,
-             "duration_ms": 5, "total_cost_usd": 0.5, "result": "done\nSTOP"},
+            {
+                "type": "system",
+                "subtype": "init",
+                "claude_code_version": "9.9.9",
+                "model": "m",
+            },
+            {
+                "type": "assistant",
+                "message": {
+                    "content": [
+                        {
+                            "type": "tool_use",
+                            "id": "a",
+                            "name": "Bash",
+                            "input": {"command": "cat /h/u/fix/" + "x" * 500},
+                        }
+                    ]
+                },
+            },
+            {
+                "type": "user",
+                "message": {
+                    "content": [
+                        {
+                            "type": "tool_result",
+                            "tool_use_id": "a",
+                            "is_error": True,
+                            "content": "Exit code 1\nboom",
+                        }
+                    ]
+                },
+            },
+            {
+                "type": "result",
+                "subtype": "success",
+                "num_turns": 2,
+                "duration_ms": 5,
+                "total_cost_usd": 0.5,
+                "result": "done\nSTOP",
+            },
         ]
         raw = "\n".join(json.dumps(e) for e in events)
         text = self.module.render("claude-code", "Use /" + NAME, raw, self.transforms)
@@ -428,10 +466,22 @@ class RendererTest(unittest.TestCase):
     def test_codex_log(self) -> None:
         events = [
             {"type": "thread.started", "thread_id": "t"},
-            {"type": "item.completed", "item": {"type": "command_execution",
-             "command": "python3 /h/u/fix/r.py", "exit_code": 1}},
-            {"type": "item.completed", "item": {"type": "agent_message", "text": "y" * 450}},
-            {"type": "item.completed", "item": {"type": "agent_message", "text": "STOP"}},
+            {
+                "type": "item.completed",
+                "item": {
+                    "type": "command_execution",
+                    "command": "python3 /h/u/fix/r.py",
+                    "exit_code": 1,
+                },
+            },
+            {
+                "type": "item.completed",
+                "item": {"type": "agent_message", "text": "y" * 450},
+            },
+            {
+                "type": "item.completed",
+                "item": {"type": "agent_message", "text": "STOP"},
+            },
             {"type": "turn.completed", "usage": {"output_tokens": 3}},
         ]
         raw = "\n".join(json.dumps(e) for e in events)
