@@ -4,9 +4,13 @@ Guidance for an agent that is about to run a multi-round
 adversarial review of code it wrote, and a small program
 that says when the loop should stop.
 
+---
+
 [![auto-lint-pr](https://github.com/trycopilotai/extended-adversarial-code-review/actions/workflows/auto-lint-pr.yml/badge.svg)](https://github.com/trycopilotai/extended-adversarial-code-review/actions/workflows/auto-lint-pr.yml)
 [![check](https://github.com/trycopilotai/extended-adversarial-code-review/actions/workflows/check.yml/badge.svg)](https://github.com/trycopilotai/extended-adversarial-code-review/actions/workflows/check.yml)
 [![lint](https://github.com/trycopilotai/extended-adversarial-code-review/actions/workflows/lint.yml/badge.svg)](https://github.com/trycopilotai/extended-adversarial-code-review/actions/workflows/lint.yml)
+
+---
 
 round_yield.py reports each of eight stopping clauses.
 
