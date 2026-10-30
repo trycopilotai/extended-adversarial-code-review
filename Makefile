@@ -4,6 +4,7 @@ PYTHON ?= python3
 check:
 	@$(PYTHON) tests/test_round_yield.py
 	@$(PYTHON) tests/test_integrations.py
+	@$(PYTHON) tests/test_readme_badges.py
 
 demo:
 	@$(PYTHON) scripts/generate_demo.py
